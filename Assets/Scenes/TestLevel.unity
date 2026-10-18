@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 1653070}
   - component: {fileID: 1653069}
   - component: {fileID: 1653068}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 3455702}
   - component: {fileID: 3455701}
   - component: {fileID: 3455700}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 33613301}
   - component: {fileID: 33613300}
   - component: {fileID: 33613299}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,7 +467,7 @@ GameObject:
   - component: {fileID: 48244966}
   - component: {fileID: 48244965}
   - component: {fileID: 48244964}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -579,7 +579,7 @@ GameObject:
   - component: {fileID: 51979462}
   - component: {fileID: 51979461}
   - component: {fileID: 51979460}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -691,7 +691,7 @@ GameObject:
   - component: {fileID: 117317316}
   - component: {fileID: 117317315}
   - component: {fileID: 117317314}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -800,7 +800,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 130710051}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Small Stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -833,6 +833,108 @@ Transform:
   - {fileID: 1820952446}
   m_Father: {fileID: 1080026303}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &138031222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 138031226}
+  - component: {fileID: 138031225}
+  - component: {fileID: 138031224}
+  - component: {fileID: 138031223}
+  m_Layer: 5
+  m_Name: Canvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &138031223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138031222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &138031224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138031222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!223 &138031225
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138031222}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!224 &138031226
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138031222}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1529244874}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!1 &163927702
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,7 +947,7 @@ GameObject:
   - component: {fileID: 163927706}
   - component: {fileID: 163927705}
   - component: {fileID: 163927704}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ramp_60 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -957,7 +1059,7 @@ GameObject:
   - component: {fileID: 182569080}
   - component: {fileID: 182569079}
   - component: {fileID: 182569078}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ramp_60
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1069,7 +1171,7 @@ GameObject:
   - component: {fileID: 205526533}
   - component: {fileID: 205526532}
   - component: {fileID: 205526531}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1169,6 +1271,85 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 205526529}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &272025288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 272025291}
+  - component: {fileID: 272025290}
+  - component: {fileID: 272025289}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &272025289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272025288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
+--- !u!114 &272025290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272025288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &272025291
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272025288}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &293564617
 GameObject:
   m_ObjectHideFlags: 0
@@ -1178,7 +1359,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 293564618}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: JumpArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1215,7 +1396,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -1266,7 +1447,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1289,12 +1470,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7, z: -4.8}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1398809849}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
@@ -1352,7 +1533,7 @@ GameObject:
   - component: {fileID: 332803066}
   - component: {fileID: 332803065}
   - component: {fileID: 332803064}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LeftWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1452,37 +1633,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 332803062}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &375354135
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 375354136}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &375354136
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 375354135}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.95608, y: 16.88325, z: 24.64175}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &381180068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1495,7 +1645,7 @@ GameObject:
   - component: {fileID: 381180072}
   - component: {fileID: 381180071}
   - component: {fileID: 381180070}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LeftWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1734,7 +1884,7 @@ GameObject:
   - component: {fileID: 476956423}
   - component: {fileID: 476956422}
   - component: {fileID: 476956421}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1846,7 +1996,7 @@ GameObject:
   - component: {fileID: 635246977}
   - component: {fileID: 635246976}
   - component: {fileID: 635246975}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1958,7 +2108,7 @@ GameObject:
   - component: {fileID: 652142821}
   - component: {fileID: 652142820}
   - component: {fileID: 652142819}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2070,7 +2220,7 @@ GameObject:
   - component: {fileID: 657805824}
   - component: {fileID: 657805823}
   - component: {fileID: 657805822}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2182,7 +2332,7 @@ GameObject:
   - component: {fileID: 661323645}
   - component: {fileID: 661323644}
   - component: {fileID: 661323643}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2294,7 +2444,7 @@ GameObject:
   - component: {fileID: 662713618}
   - component: {fileID: 662713617}
   - component: {fileID: 662713616}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2406,7 +2556,7 @@ GameObject:
   - component: {fileID: 730722911}
   - component: {fileID: 730722910}
   - component: {fileID: 730722909}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2515,7 +2665,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 787176001}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: CrouchArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2600,7 +2750,7 @@ GameObject:
   - component: {fileID: 849364029}
   - component: {fileID: 849364028}
   - component: {fileID: 849364027}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2734,6 +2884,7 @@ Transform:
   - {fileID: 1080026303}
   - {fileID: 787176001}
   - {fileID: 293564618}
+  - {fileID: 1998105356}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &873684043
@@ -2748,7 +2899,7 @@ GameObject:
   - component: {fileID: 873684047}
   - component: {fileID: 873684046}
   - component: {fileID: 873684045}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RightWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2860,7 +3011,7 @@ GameObject:
   - component: {fileID: 907612026}
   - component: {fileID: 907612025}
   - component: {fileID: 907612024}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2972,7 +3123,7 @@ GameObject:
   - component: {fileID: 924434689}
   - component: {fileID: 924434688}
   - component: {fileID: 924434687}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RightWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3084,7 +3235,7 @@ GameObject:
   - component: {fileID: 956875586}
   - component: {fileID: 956875585}
   - component: {fileID: 956875584}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3196,7 +3347,7 @@ GameObject:
   - component: {fileID: 977645130}
   - component: {fileID: 977645129}
   - component: {fileID: 977645128}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3305,7 +3456,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1046060551}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RampHeights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3342,7 +3493,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1080026303}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3376,7 +3527,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1089002527}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SImpleTunnel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3413,7 +3564,7 @@ GameObject:
   - component: {fileID: 1090214802}
   - component: {fileID: 1090214801}
   - component: {fileID: 1090214800}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3525,7 +3676,7 @@ GameObject:
   - component: {fileID: 1119438406}
   - component: {fileID: 1119438405}
   - component: {fileID: 1119438404}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ramp_30
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3637,7 +3788,7 @@ GameObject:
   - component: {fileID: 1163403377}
   - component: {fileID: 1163403376}
   - component: {fileID: 1163403375}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3749,7 +3900,7 @@ GameObject:
   - component: {fileID: 1184863245}
   - component: {fileID: 1184863244}
   - component: {fileID: 1184863243}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RampHeight (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3861,7 +4012,7 @@ GameObject:
   - component: {fileID: 1196787977}
   - component: {fileID: 1196787976}
   - component: {fileID: 1196787975}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RampHeight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3973,7 +4124,7 @@ GameObject:
   - component: {fileID: 1231647317}
   - component: {fileID: 1231647316}
   - component: {fileID: 1231647315}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4073,6 +4224,81 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1231647313}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1243159620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1243159621}
+  - component: {fileID: 1243159623}
+  - component: {fileID: 1243159622}
+  m_Layer: 5
+  m_Name: Fill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1243159621
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243159620}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1529244874}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1243159622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243159620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 0
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1243159623
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243159620}
+  m_CullTransparentMesh: 1
 --- !u!1 &1250423654
 GameObject:
   m_ObjectHideFlags: 0
@@ -4082,7 +4308,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1250423655}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Medium stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4127,7 +4353,7 @@ GameObject:
   - component: {fileID: 1303022279}
   - component: {fileID: 1303022278}
   - component: {fileID: 1303022277}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4239,7 +4465,7 @@ GameObject:
   - component: {fileID: 1307861796}
   - component: {fileID: 1307861795}
   - component: {fileID: 1307861794}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4339,6 +4565,362 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1307861792}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1312631311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1312631315}
+  - component: {fileID: 1312631314}
+  - component: {fileID: 1312631320}
+  - component: {fileID: 1312631319}
+  - component: {fileID: 1312631318}
+  - component: {fileID: 1312631317}
+  - component: {fileID: 1312631316}
+  - component: {fileID: 1312631321}
+  - component: {fileID: 1312631322}
+  m_Layer: 7
+  m_Name: Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!143 &1312631314
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312631311}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1.8
+  m_Radius: 0.35
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.05
+  m_MinMoveDistance: 0
+  m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!4 &1312631315
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312631311}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.9953577, z: -0, w: 0.09624502}
+  m_LocalPosition: {x: -28.24, y: 35.61, z: 37.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1398809849}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -168.954, z: 0}
+--- !u!114 &1312631316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312631311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1409446f1d852ed46b7eac70ea6dcf93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModularFPP.FPPJump
+  jumpHeight: 1.3
+  canJumpWhileSliding: 1
+  coyoteTime: 0.12
+  jumpBufferTime: 0.15
+  ceilingClearance: 0.4
+  jumpVolume: 0.6
+  landPitch: 0.8
+  minLandSpeed: 3
+  hardLandSpeed: 14
+  minAirTimeForLanding: 0.08
+--- !u!114 &1312631317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312631311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f14041ccf32710146ac9d712deb3779c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModularFPP.FPPMovement
+  walkSpeed: 4
+  sprintSpeed: 7
+  acceleration: 30
+  deceleration: 40
+  airControl: 0.4
+  groundedPush: -2
+  snapGapThreshold: 0.1
+  downStepSpeed: 8
+  slideSpeed: 8
+  slideAcceleration: 20
+  maxStamina: 100
+  sprintDrainPerSecond: 20
+  staminaRegenPerSecond: 15
+  regenDelay: 1
+  exhaustedRegenDelay: 1.5
+  recoverThreshold: 25
+  staminaFill: {fileID: 1243159622}
+  staminaGroup: {fileID: 1529244875}
+  hideWhenFull: 1
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  exhaustedColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  uiFadeSpeed: 4
+  showStaminaDebug: 0
+  walkStepVolume: 0.5
+  sprintStepVolume: 0.8
+  stepPitchVariation: 0.08
+--- !u!114 &1312631318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312631311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 754a65b9461d2b84280187b9cf53200a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModularFPP.FPPLook
+  mouseSensitivity: 0.1
+  gamepadSensitivity: 140
+  invertY: 0
+  maxLookUp: 85
+  maxLookDown: 85
+  useSmoothing: 1
+  smoothTime: 0.04
+--- !u!114 &1312631319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312631311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9c18816e69ccaa4e9efbf936f71c3e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModularFPP.FPPCore
+  inputAsset: {fileID: -944628639613478452, guid: 7b494693a23294746ba699575318e93d, type: 3}
+  playerCamera: {fileID: 330585545}
+  cameraRoot: {fileID: 1398809849}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1856
+  gravity: -20
+  groundCheckDistance: 0.3
+  lockCursorOnStart: 1
+  strideLength: 2.2
+  surfaces:
+  - name: Rock
+    layers:
+      serializedVersion: 2
+      m_Bits: 1024
+    footstepClips:
+    - {fileID: 8300000, guid: 1f0199a4c6005ec4abbb302f71bc036d, type: 3}
+    - {fileID: 8300000, guid: a03a96c5d1e99b4409ddd79098abd9ab, type: 3}
+    - {fileID: 8300000, guid: e3cfcb32689b274419ac73380ea96888, type: 3}
+    jumpClips:
+    - {fileID: 8300000, guid: 8420cf17e21d6354a98e6ef6d19dc9cc, type: 3}
+    - {fileID: 8300000, guid: e708389b7a8f64a46aa12d201c187b69, type: 3}
+    landClips:
+    - {fileID: 8300000, guid: 3d8f480d252db9449b2f978284506f8e, type: 3}
+    - {fileID: 8300000, guid: 79e6e1370ee1ca747b469e68d0dcb0fe, type: 3}
+    volumeMultiplier: 2
+  - name: Ground
+    layers:
+      serializedVersion: 2
+      m_Bits: 64
+    footstepClips:
+    - {fileID: 8300000, guid: 1f0199a4c6005ec4abbb302f71bc036d, type: 3}
+    - {fileID: 8300000, guid: a03a96c5d1e99b4409ddd79098abd9ab, type: 3}
+    jumpClips:
+    - {fileID: 8300000, guid: 8420cf17e21d6354a98e6ef6d19dc9cc, type: 3}
+    landClips:
+    - {fileID: 8300000, guid: 3d8f480d252db9449b2f978284506f8e, type: 3}
+    volumeMultiplier: 2
+  - name: Sand
+    layers:
+      serializedVersion: 2
+      m_Bits: 512
+    footstepClips:
+    - {fileID: 8300000, guid: 557e96b16076cb84285c90941906b44c, type: 3}
+    - {fileID: 8300000, guid: 93b5a4dc803c25c48a325a38b5617c33, type: 3}
+    - {fileID: 8300000, guid: 475881e2fee063d47b0d1aee0dad3b3a, type: 3}
+    jumpClips:
+    - {fileID: 8300000, guid: b120cc7d7055a284ea89422d100043e0, type: 3}
+    - {fileID: 8300000, guid: 7cd697be0072bfc4882068307562c2a9, type: 3}
+    landClips:
+    - {fileID: 8300000, guid: 9064dac268872fd48bf90e84554267ab, type: 3}
+    - {fileID: 8300000, guid: cff0e50a53df0a94299dc5ef1863ab62, type: 3}
+    volumeMultiplier: 2
+--- !u!82 &1312631320
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312631311}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1312631321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312631311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdd398cc35fcf3a4891e8d7013be96db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModularFPP.FPPCrouch
+  crouchHeight: 1
+  crouchSpeedMultiplier: 0.5
+  toggleMode: 0
+  allowCrouchInAir: 1
+  transitionSpeed: 12
+  obstructionMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  jumpStandMargin: 0.4
+  crouchStepVolume: 0.4
+  showDebug: 0
+--- !u!114 &1312631322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312631311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bb62049b457d454cad9ae876e1b1475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModularFPP.FPPCameraEffects
+  enableHeadBob: 1
+  bobAmplitudeY: 0.035
+  bobAmplitudeX: 0.02
+  sprintBobMultiplier: 1.5
+  crouchBobMultiplier: 0.6
+  bobFadeSpeed: 6
+  enableLandingDip: 1
+  minDipSpeed: 4
+  hardDipSpeed: 14
+  maxDip: 0.15
+  dipDownTime: 0.05
+  dipRecoverTime: 0.18
+  enableFovKick: 1
+  sprintFovBoost: 8
+  fovSpeed: 8
 --- !u!1 &1375381739
 GameObject:
   m_ObjectHideFlags: 0
@@ -4348,7 +4930,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1375381740}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ramp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4388,7 +4970,7 @@ GameObject:
   - component: {fileID: 1377014205}
   - component: {fileID: 1377014204}
   - component: {fileID: 1377014203}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4500,7 +5082,7 @@ GameObject:
   - component: {fileID: 1379888715}
   - component: {fileID: 1379888714}
   - component: {fileID: 1379888713}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4612,7 +5194,7 @@ GameObject:
   - component: {fileID: 1384330293}
   - component: {fileID: 1384330292}
   - component: {fileID: 1384330291}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4724,7 +5306,7 @@ GameObject:
   - component: {fileID: 1390764567}
   - component: {fileID: 1390764566}
   - component: {fileID: 1390764565}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RampHeight (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4824,6 +5406,38 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1390764563}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1398809848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1398809849}
+  m_Layer: 7
+  m_Name: CameraRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1398809849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1398809848}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 330585546}
+  m_Father: {fileID: 1312631315}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1407358795
 GameObject:
   m_ObjectHideFlags: 0
@@ -4836,7 +5450,7 @@ GameObject:
   - component: {fileID: 1407358799}
   - component: {fileID: 1407358798}
   - component: {fileID: 1407358797}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4948,7 +5562,7 @@ GameObject:
   - component: {fileID: 1411231500}
   - component: {fileID: 1411231499}
   - component: {fileID: 1411231498}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5060,7 +5674,7 @@ GameObject:
   - component: {fileID: 1460227375}
   - component: {fileID: 1460227374}
   - component: {fileID: 1460227373}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5169,7 +5783,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1481522836}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5205,7 +5819,7 @@ GameObject:
   - component: {fileID: 1516676447}
   - component: {fileID: 1516676446}
   - component: {fileID: 1516676445}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RampHeight (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5305,6 +5919,56 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1516676443}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1529244873
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1529244874}
+  - component: {fileID: 1529244875}
+  m_Layer: 5
+  m_Name: StaminaUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1529244874
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529244873}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2097210664}
+  - {fileID: 1243159621}
+  m_Father: {fileID: 138031226}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 60}
+  m_SizeDelta: {x: 400, y: 16}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!225 &1529244875
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529244873}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1540392383
 GameObject:
   m_ObjectHideFlags: 0
@@ -5317,7 +5981,7 @@ GameObject:
   - component: {fileID: 1540392387}
   - component: {fileID: 1540392386}
   - component: {fileID: 1540392385}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5429,7 +6093,7 @@ GameObject:
   - component: {fileID: 1580116068}
   - component: {fileID: 1580116067}
   - component: {fileID: 1580116066}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ramp_45
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5541,7 +6205,7 @@ GameObject:
   - component: {fileID: 1618310391}
   - component: {fileID: 1618310390}
   - component: {fileID: 1618310389}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5653,7 +6317,7 @@ GameObject:
   - component: {fileID: 1625513414}
   - component: {fileID: 1625513413}
   - component: {fileID: 1625513412}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RampHeight (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5765,7 +6429,7 @@ GameObject:
   - component: {fileID: 1642843411}
   - component: {fileID: 1642843410}
   - component: {fileID: 1642843409}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ramp_15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5874,7 +6538,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1675163247}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: JumpHeight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5912,7 +6576,7 @@ GameObject:
   - component: {fileID: 1695162872}
   - component: {fileID: 1695162871}
   - component: {fileID: 1695162870}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6024,7 +6688,7 @@ GameObject:
   - component: {fileID: 1761553981}
   - component: {fileID: 1761553980}
   - component: {fileID: 1761553979}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MainFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6137,7 +6801,7 @@ GameObject:
   - component: {fileID: 1779679828}
   - component: {fileID: 1779679827}
   - component: {fileID: 1779679826}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6249,7 +6913,7 @@ GameObject:
   - component: {fileID: 1781500034}
   - component: {fileID: 1781500033}
   - component: {fileID: 1781500032}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6358,7 +7022,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1785635479}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tall stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6403,7 +7067,7 @@ GameObject:
   - component: {fileID: 1800671098}
   - component: {fileID: 1800671097}
   - component: {fileID: 1800671096}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6515,7 +7179,7 @@ GameObject:
   - component: {fileID: 1820952449}
   - component: {fileID: 1820952448}
   - component: {fileID: 1820952447}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6627,7 +7291,7 @@ GameObject:
   - component: {fileID: 1842960662}
   - component: {fileID: 1842960661}
   - component: {fileID: 1842960660}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RampHeight (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6739,7 +7403,7 @@ GameObject:
   - component: {fileID: 1852872226}
   - component: {fileID: 1852872225}
   - component: {fileID: 1852872224}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6851,7 +7515,7 @@ GameObject:
   - component: {fileID: 1864894004}
   - component: {fileID: 1864894003}
   - component: {fileID: 1864894002}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6963,7 +7627,7 @@ GameObject:
   - component: {fileID: 1922163575}
   - component: {fileID: 1922163574}
   - component: {fileID: 1922163573}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7072,7 +7736,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1925332165}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7110,7 +7774,7 @@ GameObject:
   - component: {fileID: 1955950322}
   - component: {fileID: 1955950321}
   - component: {fileID: 1955950320}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7222,7 +7886,7 @@ GameObject:
   - component: {fileID: 1976237639}
   - component: {fileID: 1976237638}
   - component: {fileID: 1976237637}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7322,6 +7986,118 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1976237635}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1998105355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1998105356}
+  - component: {fileID: 1998105359}
+  - component: {fileID: 1998105358}
+  - component: {fileID: 1998105357}
+  m_Layer: 8
+  m_Name: DirtyGround
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1998105356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998105355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -25, y: 0.1, z: -30}
+  m_LocalScale: {x: 30, y: 0.2, z: 30}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 873045061}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1998105357
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998105355}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1998105358
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998105355}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1998105359
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998105355}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2013831693
 GameObject:
   m_ObjectHideFlags: 0
@@ -7334,7 +8110,7 @@ GameObject:
   - component: {fileID: 2013831697}
   - component: {fileID: 2013831696}
   - component: {fileID: 2013831695}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7446,7 +8222,7 @@ GameObject:
   - component: {fileID: 2021517829}
   - component: {fileID: 2021517828}
   - component: {fileID: 2021517827}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7555,7 +8331,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2034628734}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SlopeTunnel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7592,7 +8368,7 @@ GameObject:
   - component: {fileID: 2034914359}
   - component: {fileID: 2034914358}
   - component: {fileID: 2034914357}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7692,6 +8468,81 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2034914355}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2097210663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2097210664}
+  - component: {fileID: 2097210666}
+  - component: {fileID: 2097210665}
+  m_Layer: 5
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2097210664
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097210663}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1529244874}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2097210665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097210663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.2, g: 0.2, b: 0.2, a: 0.5882353}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &2097210666
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097210663}
+  m_CullTransparentMesh: 1
 --- !u!1 &2116394132
 GameObject:
   m_ObjectHideFlags: 0
@@ -7704,7 +8555,7 @@ GameObject:
   - component: {fileID: 2116394136}
   - component: {fileID: 2116394135}
   - component: {fileID: 2116394134}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7813,7 +8664,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2129484264}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: JumpDistance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7849,7 +8700,7 @@ GameObject:
   - component: {fileID: 2146899133}
   - component: {fileID: 2146899132}
   - component: {fileID: 2146899131}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stair (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7953,8 +8804,9 @@ MeshFilter:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 873045061}
-  - {fileID: 375354136}
+  - {fileID: 1312631315}
+  - {fileID: 138031226}
+  - {fileID: 272025291}
