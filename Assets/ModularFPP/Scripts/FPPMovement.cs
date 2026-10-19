@@ -176,7 +176,7 @@ namespace ModularFPP
         // ---------- FOOTSTEPS ----------
         protected virtual void HandleFootsteps(float dt)
         {
-            if (!core.IsGrounded || core.IsSliding) return;
+            if (!core.IsGrounded) return;
 
             float speed = core.ActualHorizontalSpeed;
             if (speed < 0.5f) return;
