@@ -87,9 +87,14 @@ namespace ModularFPP
         // ---------- SPRINT + STAMINA ----------
         protected virtual void HandleSprint()
         {
-            bool wantsSprint = core.SprintAction.IsPressed() && moveInput.y > 0.1f;
-            isSprinting = wantsSprint && !isExhausted && stamina > 0f
-                          && !core.IsSliding && !core.SprintBlocked;
+            bool wantsSprint = core.SprintAction.IsPressed()
+                               && moveInput.sqrMagnitude > 0.01f;
+
+            isSprinting = wantsSprint
+                          && !isExhausted
+                          && stamina > 0f
+                          && !core.IsSliding
+                          && !core.SprintBlocked;
         }
 
         protected virtual void HandleStamina(float dt)
