@@ -4791,12 +4791,13 @@ MonoBehaviour:
   XVelocityParam: X_Velocity
   YVelocityParam: Y_Velocity
   ZVelocityParam: Z_Velocity
-  speedParam: Speed
-  sprintingParam: IsSprinting
-  crouchingParam: IsCrouching
+  movingParam: Moving
+  crouchingParam: Crouch
   fallingParam: Falling
   jumpTrigger: Jump
   landTrigger: Land
+  movingEnterSpeed: 0.1
+  movingExitSpeed: 0.05
   moveDamp: 0.1
   fallingVelocityThreshold: -2
   showDebug: 0

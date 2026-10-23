@@ -14,11 +14,18 @@ namespace ModularFPP
         [SerializeField] private string XVelocityParam = "X_Velocity";
         [SerializeField] private string YVelocityParam = "Y_Velocity";
         [SerializeField] private string ZVelocityParam = "Z_Velocity";
+        [SerializeField] private string movingParam = "Moving";
 
         [SerializeField] private string crouchingParam = "Crouch";
         [SerializeField] private string fallingParam = "Falling";
         [SerializeField] private string jumpTrigger = "Jump";
         [SerializeField] private string landTrigger = "Land"; // ADDED BACK
+        [Header("Moving Detection")]
+        [Tooltip("Speed at which Moving flips true.")]
+        [SerializeField] private float movingEnterSpeed = 0.1f;
+
+        [Tooltip("Speed below which Moving flips false (must be < enter speed).")]
+        [SerializeField] private float movingExitSpeed = 0.05f;
 
         [Header("Tuning")]
         [SerializeField, Min(0f)] private float moveDamp = 0.1f;
@@ -30,22 +37,25 @@ namespace ModularFPP
         [SerializeField] private bool showDebug;
         [SerializeField, Min(0.01f)] private float triggerResetDelay = 0.2f;
 
+
+
         private sealed class Target
         {
             public Animator animator;
             public bool hasX, hasY, hasZ;
-            public bool hasCrouching, hasFalling;
+            public bool hasCrouching, hasFalling, hasMoving;
             public bool hasJumpTrigger, hasLandTrigger;
         }
 
         private readonly List<Target> targets = new List<Target>(2);
         private int xHash, yHash, zHash, crouchingHash;
-        private int fallingHash, jumpHash, landHash;
+        private int fallingHash, jumpHash, landHash, movingHash;
 
         private float jumpResetTimer;
         private float landResetTimer;
         private bool jumpTriggeredThisFrame;
         private bool landTriggeredThisFrame;
+        private bool isMoving; // cached state
 
         // Debug throttle so logs don't spam every frame (logs every N frames)
         private const int DebugLogInterval = 10;
@@ -65,6 +75,7 @@ namespace ModularFPP
             fallingHash = Animator.StringToHash(fallingParam);
             jumpHash = Animator.StringToHash(jumpTrigger);
             landHash = Animator.StringToHash(landTrigger);
+            movingHash = Animator.StringToHash(movingParam);
 
             foreach (Animator animator in animators)
             {
@@ -86,6 +97,7 @@ namespace ModularFPP
                     {
                         if (p.nameHash == crouchingHash) target.hasCrouching = true;
                         else if (p.nameHash == fallingHash) target.hasFalling = true;
+                        else if (p.nameHash == movingHash) target.hasMoving = true;
                     }
                     else if (p.type == AnimatorControllerParameterType.Trigger)
                     {
@@ -132,15 +144,21 @@ namespace ModularFPP
         {
             Vector3 localVelocity = transform.InverseTransformDirection(core.ActualVelocity);
             float horizontalSpeed = core.ActualHorizontalSpeed;
+            float speed = horizontalSpeed; // same thing, kept for clarity
 
             bool grounded = core.IsGrounded;
-
-            // Use threshold to ensure windup doesn't trigger falling
             bool falling = !grounded && localVelocity.y < fallingVelocityThreshold;
-
             bool sprinting = core.IsSprinting && horizontalSpeed > 0.5f;
             bool crouching = core.IsCrouching;
 
+            if (isMoving)
+            {
+                if (speed < movingExitSpeed) isMoving = false;
+            }
+            else
+            {
+                if (speed > movingEnterSpeed) isMoving = true;
+            }
             if (showDebug)
             {
                 debugFrameCounter++;
@@ -149,6 +167,7 @@ namespace ModularFPP
                     debugFrameCounter = 0;
                     Debug.Log(
                         $"[FPPAnimation] Core values -> " +
+                         $"ActualSpeed={speed} " +
                         $"ActualVelocity={core.ActualVelocity} " +
                         $"LocalVelocity={localVelocity} " +
                         $"ActualHorizontalSpeed={horizontalSpeed:F3} " +
@@ -162,17 +181,22 @@ namespace ModularFPP
                 }
             }
 
+
             for (int i = 0; i < targets.Count; i++)
             {
                 Target target = targets[i];
                 Animator animator = target.animator;
                 if (animator == null || !animator.isActiveAndEnabled) continue;
 
-                if (target.hasX) animator.SetFloat(xHash, localVelocity.x, moveDamp, dt);
-                if (target.hasY) animator.SetFloat(yHash, localVelocity.z, moveDamp, dt);
-                if (target.hasZ) animator.SetFloat(zHash, localVelocity.y, moveDamp, dt);
+               
+                    if (target.hasX) animator.SetFloat(xHash, localVelocity.x, moveDamp, dt);
+                    if (target.hasY) animator.SetFloat(yHash, localVelocity.z, moveDamp, dt);
+                    if (target.hasZ) animator.SetFloat(zHash, localVelocity.y, moveDamp, dt);
+                
+
                 if (target.hasCrouching) animator.SetBool(crouchingHash, crouching);
                 if (target.hasFalling) animator.SetBool(fallingHash, falling);
+                if (target.hasMoving) animator.SetBool(movingHash, isMoving);
             }
 
             HandleTriggerResets(dt);
