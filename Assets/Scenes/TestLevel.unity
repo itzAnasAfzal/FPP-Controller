@@ -4741,7 +4741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1409446f1d852ed46b7eac70ea6dcf93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ModularFPP.FPPJump
-  jumpHeight: 1.3
+  jumpHeight: 0.8
   canJumpWhileSliding: 1
   jumpPhysicsDelay: 0.25
   coyoteTime: 0.12

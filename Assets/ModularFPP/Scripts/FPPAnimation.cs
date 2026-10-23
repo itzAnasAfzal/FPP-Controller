@@ -14,9 +14,8 @@ namespace ModularFPP
         [SerializeField] private string XVelocityParam = "X_Velocity";
         [SerializeField] private string YVelocityParam = "Y_Velocity";
         [SerializeField] private string ZVelocityParam = "Z_Velocity";
-        [SerializeField] private string speedParam = "Speed";
-        [SerializeField] private string sprintingParam = "IsSprinting";
-        [SerializeField] private string crouchingParam = "IsCrouching";
+
+        [SerializeField] private string crouchingParam = "Crouch";
         [SerializeField] private string fallingParam = "Falling";
         [SerializeField] private string jumpTrigger = "Jump";
         [SerializeField] private string landTrigger = "Land"; // ADDED BACK
@@ -34,19 +33,23 @@ namespace ModularFPP
         private sealed class Target
         {
             public Animator animator;
-            public bool hasX, hasY, hasZ, hasSpeed;
-            public bool hasSprinting, hasCrouching, hasGrounded, hasFalling;
+            public bool hasX, hasY, hasZ;
+            public bool hasCrouching, hasFalling;
             public bool hasJumpTrigger, hasLandTrigger;
         }
 
         private readonly List<Target> targets = new List<Target>(2);
-        private int xHash, yHash, zHash, speedHash, sprintingHash, crouchingHash;
-        private int  fallingHash, jumpHash, landHash;
+        private int xHash, yHash, zHash, crouchingHash;
+        private int fallingHash, jumpHash, landHash;
 
         private float jumpResetTimer;
         private float landResetTimer;
         private bool jumpTriggeredThisFrame;
         private bool landTriggeredThisFrame;
+
+        // Debug throttle so logs don't spam every frame (logs every N frames)
+        private const int DebugLogInterval = 10;
+        private int debugFrameCounter;
 
         protected override void Awake()
         {
@@ -58,8 +61,6 @@ namespace ModularFPP
             xHash = Animator.StringToHash(XVelocityParam);
             yHash = Animator.StringToHash(YVelocityParam);
             zHash = Animator.StringToHash(ZVelocityParam);
-            speedHash = Animator.StringToHash(speedParam);
-            sprintingHash = Animator.StringToHash(sprintingParam);
             crouchingHash = Animator.StringToHash(crouchingParam);
             fallingHash = Animator.StringToHash(fallingParam);
             jumpHash = Animator.StringToHash(jumpTrigger);
@@ -80,12 +81,10 @@ namespace ModularFPP
                         if (p.nameHash == xHash) target.hasX = true;
                         else if (p.nameHash == yHash) target.hasY = true;
                         else if (p.nameHash == zHash) target.hasZ = true;
-                        else if (p.nameHash == speedHash) target.hasSpeed = true;
                     }
                     else if (p.type == AnimatorControllerParameterType.Bool)
                     {
-                        if (p.nameHash == sprintingHash) target.hasSprinting = true;
-                        else if (p.nameHash == crouchingHash) target.hasCrouching = true;
+                        if (p.nameHash == crouchingHash) target.hasCrouching = true;
                         else if (p.nameHash == fallingHash) target.hasFalling = true;
                     }
                     else if (p.type == AnimatorControllerParameterType.Trigger)
@@ -95,7 +94,20 @@ namespace ModularFPP
                     }
                 }
                 targets.Add(target);
+
+                if (showDebug)
+                {
+                    Debug.Log(
+                        $"[FPPAnimation] Registered animator '{animator.name}' " +
+                        $"(hasX={target.hasX}, hasY={target.hasY}, hasZ={target.hasZ}, " +
+                        $"hasCrouching={target.hasCrouching}, hasFalling={target.hasFalling}, " +
+                        $"hasJumpTrigger={target.hasJumpTrigger}, hasLandTrigger={target.hasLandTrigger})",
+                        this);
+                }
             }
+
+            if (showDebug)
+                Debug.Log($"[FPPAnimation] Awake complete. Targets registered: {targets.Count}", this);
         }
 
         protected override void OnEnable()
@@ -129,6 +141,27 @@ namespace ModularFPP
             bool sprinting = core.IsSprinting && horizontalSpeed > 0.5f;
             bool crouching = core.IsCrouching;
 
+            if (showDebug)
+            {
+                debugFrameCounter++;
+                if (debugFrameCounter >= DebugLogInterval)
+                {
+                    debugFrameCounter = 0;
+                    Debug.Log(
+                        $"[FPPAnimation] Core values -> " +
+                        $"ActualVelocity={core.ActualVelocity} " +
+                        $"LocalVelocity={localVelocity} " +
+                        $"ActualHorizontalSpeed={horizontalSpeed:F3} " +
+                        $"IsGrounded={grounded} " +
+                        $"Falling={falling} " +
+                        $"IsSprinting={core.IsSprinting} " +
+                        $"Sprinting={sprinting} " +
+                        $"IsCrouching={crouching} " +
+                        $"moveDamp={moveDamp:F3} fallingVelocityThreshold={fallingVelocityThreshold:F3}",
+                        this);
+                }
+            }
+
             for (int i = 0; i < targets.Count; i++)
             {
                 Target target = targets[i];
@@ -138,8 +171,6 @@ namespace ModularFPP
                 if (target.hasX) animator.SetFloat(xHash, localVelocity.x, moveDamp, dt);
                 if (target.hasY) animator.SetFloat(yHash, localVelocity.z, moveDamp, dt);
                 if (target.hasZ) animator.SetFloat(zHash, localVelocity.y, moveDamp, dt);
-                if (target.hasSpeed) animator.SetFloat(speedHash, horizontalSpeed, moveDamp, dt);
-                if (target.hasSprinting) animator.SetBool(sprintingHash, sprinting);
                 if (target.hasCrouching) animator.SetBool(crouchingHash, crouching);
                 if (target.hasFalling) animator.SetBool(fallingHash, falling);
             }
@@ -149,6 +180,9 @@ namespace ModularFPP
 
         private void HandleJumped()
         {
+            if (showDebug)
+                Debug.Log($"[FPPAnimation] Core.Jumped fired -> triggering '{jumpTrigger}'", this);
+
             Fire(jumpHash, true);
             jumpResetTimer = triggerResetDelay;
             jumpTriggeredThisFrame = true;
@@ -156,6 +190,12 @@ namespace ModularFPP
 
         private void HandleLanded(float impactSpeed, float airTime)
         {
+            if (showDebug)
+                Debug.Log(
+                    $"[FPPAnimation] Core.Landed fired -> triggering '{landTrigger}' " +
+                    $"(impactSpeed={impactSpeed:F3}, airTime={airTime:F3})",
+                    this);
+
             // Fire Land trigger instantly when touched ground
             Fire(landHash, true);
             landResetTimer = triggerResetDelay;
@@ -168,14 +208,22 @@ namespace ModularFPP
             else if (jumpResetTimer > 0f)
             {
                 jumpResetTimer -= dt;
-                if (jumpResetTimer <= 0f) Fire(jumpHash, false);
+                if (jumpResetTimer <= 0f)
+                {
+                    if (showDebug) Debug.Log($"[FPPAnimation] Resetting trigger '{jumpTrigger}'", this);
+                    Fire(jumpHash, false);
+                }
             }
 
             if (landTriggeredThisFrame) landTriggeredThisFrame = false;
             else if (landResetTimer > 0f)
             {
                 landResetTimer -= dt;
-                if (landResetTimer <= 0f) Fire(landHash, false);
+                if (landResetTimer <= 0f)
+                {
+                    if (showDebug) Debug.Log($"[FPPAnimation] Resetting trigger '{landTrigger}'", this);
+                    Fire(landHash, false);
+                }
             }
         }
 
