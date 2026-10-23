@@ -25,7 +25,15 @@ namespace ModularFPP
         protected override void Awake()
         {
             base.Awake();
+            if (core.CameraRoot == null)
+            {
+                Debug.LogError("FPPLook: assign a Camera Root on FPPCore before enabling look.", this);
+                enabled = false;
+                return;
+            }
+
             targetYaw = currentYaw = transform.eulerAngles.y;
+            targetPitch = currentPitch = Mathf.DeltaAngle(0f, core.CameraRoot.localEulerAngles.x);
         }
 
         public override void Tick(float dt)

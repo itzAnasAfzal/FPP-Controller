@@ -5,13 +5,11 @@ using UnityEngine.InputSystem;
 
 namespace ModularFPP
 {
-    [DefaultExecutionOrder(-100)]          // Core wakes up before every feature
+    [DefaultExecutionOrder(-100)]
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(CharacterController))]
-    [RequireComponent(typeof(AudioSource))]
+    [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
     public class FPPCore : MonoBehaviour
     {
-        // ---------- ASSIGN ONCE, HERE AND ONLY HERE ----------
         [Header("References")]
         [SerializeField] private InputActionAsset inputAsset;
         [SerializeField] private Camera playerCamera;
@@ -19,21 +17,21 @@ namespace ModularFPP
 
         [Header("World Settings")]
         [SerializeField] private LayerMask groundMask;
-        [SerializeField] private float gravity = -20f;
-        [SerializeField] private float groundCheckDistance = 0.3f;
+        [SerializeField, Min(0.01f)] private float gravity = -20f;
+        [SerializeField, Min(0.01f)] private float groundCheckDistance = 0.3f;
         [SerializeField] private bool lockCursorOnStart = true;
+
         [Header("Shared Movement Feel")]
-        [SerializeField] private float strideLength = 2.2f;
-        public float StrideLength => strideLength;
+        [SerializeField, Min(0.1f)] private float strideLength = 2.2f;
 
         [Header("Surface Sounds")]
         [SerializeField] private SurfaceSound[] surfaces;
 
-        // ---------- READ-ONLY ACCESS FOR FEATURES ----------
         public Camera PlayerCamera => playerCamera;
         public Transform CameraRoot => cameraRoot;
         public LayerMask GroundMask => groundMask;
         public float Gravity => gravity;
+        public float StrideLength => strideLength;
         public CharacterController Controller { get; private set; }
         public AudioSource Audio { get; private set; }
 
@@ -45,49 +43,35 @@ namespace ModularFPP
 
         public bool CursorIsLocked => Cursor.lockState == CursorLockMode.Locked;
 
-        // ---------- SHARED STATE (features read and write these) ----------
+        // Shared movement state. Core writes ground/motion data; modules write their own state.
         public bool IsGrounded { get; set; }
         public bool IsSliding { get; private set; }
         public Vector3 GroundNormal { get; private set; } = Vector3.up;
         public float SlopeAngle { get; private set; }
         public float GroundGap { get; private set; }
         public Collider GroundCollider { get; private set; }
+        public Vector3 ActualVelocity { get; private set; }
+        public float ActualHorizontalSpeed { get; private set; }
 
         public float VerticalVelocity { get; set; }
         public bool LaunchedThisFrame { get; set; }
-
         public bool IsSprinting { get; set; }
         public bool IsCrouching { get; set; }
-
-        // "Switches" that one feature can flip to influence another (Crouch will use these)
         public float SpeedMultiplier { get; set; } = 1f;
         public bool SprintBlocked { get; set; }
         public bool JumpBlocked { get; set; }
         public float StepVolumeMultiplier { get; set; } = 1f;
 
-        public float ActualHorizontalSpeed
-        {
-            get { Vector3 v = Controller.velocity; return new Vector2(v.x, v.z).magnitude; }
-        }
-
-        // ---------- EVENTS (camera effects etc. subscribe to these) ----------
         public event Action Jumped;
-        public event Action<float, float> Landed;   // impactSpeed, airTime
+        public event Action<float, float> Landed;
+
         public void NotifyJumped() => Jumped?.Invoke();
         public void NotifyLanded(float impactSpeed, float airTime) => Landed?.Invoke(impactSpeed, airTime);
 
-        // ---------- INTERNAL ----------
         private InputActionMap playerMap;
         private Collider lastGroundCollider;
-        private readonly List<FPPModule> modules = new List<FPPModule>();
-
-        public void Register(FPPModule module)
-        {
-            if (!modules.Contains(module)) modules.Add(module);
-            modules.Sort((a, b) => a.Order.CompareTo(b.Order));
-        }
-
-        public void Unregister(FPPModule module) => modules.Remove(module);
+        private readonly List<FPPModule> modules = new List<FPPModule>(8);
+        private readonly SurfaceSound[] surfaceByLayer = new SurfaceSound[32];
 
         private void Awake()
         {
@@ -99,17 +83,41 @@ namespace ModularFPP
 
             if (inputAsset == null)
             {
-                Debug.LogError("FPPCore: Input Asset is not assigned!", this);
+                Debug.LogError("FPPCore: Assign an InputActionAsset containing a 'Player' map.", this);
                 enabled = false;
                 return;
             }
 
-            playerMap = inputAsset.FindActionMap("Player", true);
-            MoveAction = playerMap.FindAction("Move", true);
-            LookAction = playerMap.FindAction("Look", true);
-            JumpAction = playerMap.FindAction("Jump", true);
-            SprintAction = playerMap.FindAction("Sprint", true);
-            CrouchAction = playerMap.FindAction("Crouch", true);
+            if (playerCamera == null || cameraRoot == null)
+                Debug.LogWarning("FPPCore: Camera or Camera Root was not found. Assign them if Look, Crouch, or Camera Effects are enabled.", this);
+
+            playerMap = inputAsset.FindActionMap("Player", false);
+            if (playerMap == null)
+            {
+                Debug.LogError("FPPCore: The Input Actions asset needs an action map named 'Player'.", this);
+                enabled = false;
+                return;
+            }
+
+            MoveAction = playerMap.FindAction("Move", false);
+            LookAction = playerMap.FindAction("Look", false);
+            JumpAction = playerMap.FindAction("Jump", false);
+            SprintAction = playerMap.FindAction("Sprint", false);
+            CrouchAction = playerMap.FindAction("Crouch", false);
+
+            if (MoveAction == null || LookAction == null || JumpAction == null
+                || SprintAction == null || CrouchAction == null)
+            {
+                Debug.LogError("FPPCore: The 'Player' map must contain Move, Look, Jump, Sprint, and Crouch actions (case-sensitive).", this);
+                enabled = false;
+                return;
+            }
+
+            strideLength = Mathf.Max(0.1f, strideLength);
+            gravity = Mathf.Min(-0.01f, gravity);
+            groundCheckDistance = Mathf.Max(0.01f, groundCheckDistance);
+            RebuildSurfaceCache();
+            RefreshMotionState();
         }
 
         private void OnEnable()
@@ -120,73 +128,119 @@ namespace ModularFPP
 
         private void OnDisable() => playerMap?.Disable();
 
-        // ---------- THE CONDUCTOR ----------
+        // Maintain a sorted list at registration time, not by sorting during gameplay.
+        public void Register(FPPModule module)
+        {
+            if (module == null || modules.Contains(module)) return;
+
+            int index = modules.Count;
+            while (index > 0 && modules[index - 1].Order > module.Order) index--;
+            modules.Insert(index, module);
+        }
+
+        public void Unregister(FPPModule module)
+        {
+            if (module != null) modules.Remove(module);
+        }
+
         private void Update()
         {
             HandleCursorLock();
 
+            // ActualVelocity is refreshed after the previous CharacterController.Move call.
             LaunchedThisFrame = false;
             UpdateGroundState();
 
             float dt = Time.deltaTime;
             for (int i = 0; i < modules.Count; i++)
-                modules[i].Tick(dt);          // features run in Order: low number first
+            {
+                FPPModule module = modules[i];
+                if (module != null && module.isActiveAndEnabled)
+                    module.Tick(dt);
+            }
         }
 
-        // ---------- GROUND DETECTION (every feature needs this, so Core owns it) ----------
+        // Call again immediately after CharacterController.Move so later modules share one fresh result.
+        public void RefreshMotionState()
+        {
+            if (Controller == null) return;
+
+            ActualVelocity = Controller.velocity;
+            ActualHorizontalSpeed = new Vector2(ActualVelocity.x, ActualVelocity.z).magnitude;
+        }
+
         private void UpdateGroundState()
         {
-            float r = Controller.radius * 0.95f;
-            float originHeight = Controller.radius + 0.05f;
+            CharacterController cc = Controller;
+            float castRadius = cc.radius * 0.95f;
+            float originHeight = cc.radius + 0.05f;
             Vector3 origin = transform.position + Vector3.up * originHeight;
+            float bottomOffset = originHeight - castRadius;
 
-            IsGrounded = Physics.SphereCast(origin, r, Vector3.down, out RaycastHit sphereHit,
-                0.05f + groundCheckDistance, groundMask, QueryTriggerInteraction.Ignore);
+            bool foundGround = Physics.SphereCast(
+                origin, castRadius, Vector3.down, out RaycastHit sphereHit,
+                bottomOffset + groundCheckDistance, groundMask, QueryTriggerInteraction.Ignore);
 
-            if (VerticalVelocity > 0.1f) IsGrounded = false;    // moving up = not grounded
-
+            // Ignore ground probes while rising; otherwise they can cancel a jump on its first frame.
+            IsGrounded = foundGround && VerticalVelocity <= 0.1f;
             GroundNormal = Vector3.up;
             GroundCollider = null;
             GroundGap = 0f;
 
-        
             if (IsGrounded)
             {
-                float bottomOffset = originHeight - r;
                 GroundGap = Mathf.Max(0f, sphereHit.distance - bottomOffset);
                 GroundCollider = sphereHit.collider;
+                GroundNormal = sphereHit.normal;
 
-                // True surface normal: ray straight down onto the exact spot the sphere touched.
-                // (Shooting from the capsule's center misses steep slopes.)
-                if (Physics.Raycast(sphereHit.point + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit,
-                        0.3f, groundMask, QueryTriggerInteraction.Ignore))
+                // Flat-ground sphere normals are already sufficient, so avoid a second physics query
+                // there. Refine sloped/edge contacts with a ray and accept only the same collider.
+                if (sphereHit.normal.y < 0.999f
+                    && Physics.Raycast(sphereHit.point + Vector3.up * 0.1f, Vector3.down,
+                        out RaycastHit rayHit, 0.3f, groundMask, QueryTriggerInteraction.Ignore)
+                    && rayHit.collider == sphereHit.collider)
                 {
-                    GroundNormal = hit.normal;
-                    GroundCollider = hit.collider;
+                    GroundNormal = rayHit.normal;
                 }
             }
 
-            SlopeAngle = Vector3.Angle(GroundNormal, Vector3.up); 
-            IsSliding = IsGrounded && SlopeAngle > Controller.slopeLimit - 0.5f;
+            SlopeAngle = Vector3.Angle(GroundNormal, Vector3.up);
+            float slideStartAngle = cc.slopeLimit - 0.5f;
+            float slideStopAngle = cc.slopeLimit - 3f;
+            IsSliding = IsGrounded && (IsSliding ? SlopeAngle > slideStopAngle : SlopeAngle > slideStartAngle);
+
             if (GroundCollider != null) lastGroundCollider = GroundCollider;
+        }
+
+        public void RebuildSurfaceCache()
+        {
+            Array.Clear(surfaceByLayer, 0, surfaceByLayer.Length);
+            if (surfaces == null) return;
+
+            // Preserve the original rule: the first surface entry matching a layer wins.
+            for (int i = 0; i < surfaces.Length; i++)
+            {
+                SurfaceSound surface = surfaces[i];
+                if (surface == null) continue;
+
+                int layerBits = surface.layers.value;
+                for (int layer = 0; layer < surfaceByLayer.Length; layer++)
+                {
+                    if (surfaceByLayer[layer] == null && (layerBits & (1 << layer)) != 0)
+                        surfaceByLayer[layer] = surface;
+                }
+            }
         }
 
         public SurfaceSound GetCurrentSurface()
         {
-            // Falls back to the last ground we touched, so a coyote-time jump still has a surface
-            Collider c = GroundCollider != null ? GroundCollider : lastGroundCollider;
-            if (c == null || surfaces == null) return null;
+            Collider surfaceCollider = GroundCollider != null ? GroundCollider : lastGroundCollider;
+            if (surfaceCollider == null) return null;
 
-            int layerBit = 1 << c.gameObject.layer;
-            for (int i = 0; i < surfaces.Length; i++)
-            {
-                if (surfaces[i] != null && (surfaces[i].layers.value & layerBit) != 0)
-                    return surfaces[i];
-            }
-            return null;
+            int layer = surfaceCollider.gameObject.layer;
+            return layer >= 0 && layer < surfaceByLayer.Length ? surfaceByLayer[layer] : null;
         }
 
-        // ---------- CURSOR + SOUND HELPERS ----------
         private void HandleCursorLock()
         {
             if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
@@ -203,7 +257,7 @@ namespace ModularFPP
 
         public void PlaySound(AudioClip clip, float volume = 1f, float pitch = 1f)
         {
-            if (clip == null) return;
+            if (clip == null || Audio == null) return;
             Audio.pitch = pitch;
             Audio.PlayOneShot(clip, volume);
         }

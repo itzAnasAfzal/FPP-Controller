@@ -8,10 +8,10 @@ namespace ModularFPP
         public override int Order => 100;      // runs last: it applies everyone's decisions
 
         [Header("Movement")]
-        [SerializeField] protected float walkSpeed = 4f;
-        [SerializeField] protected float sprintSpeed = 7f;
-        [SerializeField] protected float acceleration = 30f;
-        [SerializeField] protected float deceleration = 40f;
+        [SerializeField, Min(0f)] protected float walkSpeed = 4f;
+        [SerializeField, Min(0f)] protected float sprintSpeed = 7f;
+        [SerializeField, Min(0f)] protected float acceleration = 30f;
+        [SerializeField, Min(0f)] protected float deceleration = 40f;
         [SerializeField, Range(0f, 1f)] protected float airControl = 0.4f;
 
         [Header("Ground Snapping")]
@@ -24,9 +24,9 @@ namespace ModularFPP
         [SerializeField] protected float slideAcceleration = 20f;
 
         [Header("Stamina")]
-        [SerializeField] protected float maxStamina = 100f;
-        [SerializeField] protected float sprintDrainPerSecond = 20f;
-        [SerializeField] protected float staminaRegenPerSecond = 15f;
+        [SerializeField, Min(0.01f)] protected float maxStamina = 100f;
+        [SerializeField, Min(0f)] protected float sprintDrainPerSecond = 20f;
+        [SerializeField, Min(0f)] protected float staminaRegenPerSecond = 15f;
         [SerializeField] protected float regenDelay = 1f;
         [SerializeField] protected float exhaustedRegenDelay = 1.5f;
         [SerializeField] protected float recoverThreshold = 25f;
@@ -61,11 +61,19 @@ namespace ModularFPP
         protected override void Awake()
         {
             base.Awake();
+            maxStamina = Mathf.Max(0.01f, maxStamina);
             stamina = maxStamina;
+            recoverThreshold = Mathf.Clamp(recoverThreshold, 0f, maxStamina);
 
             footstepSource = gameObject.AddComponent<AudioSource>();
             footstepSource.playOnAwake = false;
             footstepSource.spatialBlend = 0f;
+        }
+
+        protected override void OnDisable()
+        {
+            if (core != null) core.IsSprinting = false;
+            base.OnDisable();
         }
 
         public override void Tick(float dt)
@@ -176,6 +184,9 @@ namespace ModularFPP
 
             if ((flags & CollisionFlags.Above) != 0 && core.VerticalVelocity > 0f)
                 core.VerticalVelocity = 0f;
+
+            // Refresh once after Move; camera and animation modules reuse this cached velocity.
+            core.RefreshMotionState();
         }
 
         // ---------- FOOTSTEPS ----------
@@ -217,7 +228,7 @@ namespace ModularFPP
         {
             if (staminaFill != null)
             {
-                staminaFill.fillAmount = stamina / maxStamina;
+                staminaFill.fillAmount = Mathf.Clamp01(stamina / maxStamina);
                 staminaFill.color = isExhausted ? exhaustedColor : normalColor;
             }
 

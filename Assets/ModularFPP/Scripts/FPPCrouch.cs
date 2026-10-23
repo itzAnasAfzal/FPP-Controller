@@ -40,6 +40,13 @@ namespace ModularFPP
         {
             base.Awake();
 
+            if (core.CameraRoot == null)
+            {
+                Debug.LogError("FPPCrouch: assign a Camera Root on FPPCore before enabling crouch.", this);
+                enabled = false;
+                return;
+            }
+
             CharacterController cc = core.Controller;
             standHeight = cc.height;
             crouchHeight = Mathf.Clamp(crouchHeight, cc.radius * 2f + 0.01f, standHeight - 0.1f);
@@ -66,12 +73,49 @@ namespace ModularFPP
             if (core != null)
             {
                 core.Jumped -= HandleJumped;
-                core.SpeedMultiplier = 1f;
-                core.StepVolumeMultiplier = 1f;
-                core.SprintBlocked = false;
-                core.JumpBlocked = false;
-                core.IsCrouching = false;
+
+                bool canRestoreStandingShape = core.Controller != null
+                    && core.CameraRoot != null
+                    && standHeight > 0f
+                    && CanStandUp();
+
+                if (canRestoreStandingShape)
+                {
+                    CharacterController cc = core.Controller;
+                    cc.height = standHeight;
+                    cc.center = new Vector3(cc.center.x, standHeight * 0.5f, cc.center.z);
+
+                    Vector3 cameraPosition = core.CameraRoot.localPosition;
+                    cameraPosition.y = cameraStandY;
+                    core.CameraRoot.localPosition = cameraPosition;
+
+                    core.SpeedMultiplier = 1f;
+                    core.StepVolumeMultiplier = 1f;
+                    core.SprintBlocked = false;
+                    core.JumpBlocked = false;
+                    core.IsCrouching = false;
+                }
+                else if (standHeight > 0f && core.Controller != null
+                         && core.Controller.height < standHeight - 0.01f)
+                {
+                    // If disabled under a low ceiling, keep the crouched state and restrictions
+                    // rather than leaving a short capsule with standing-speed settings.
+                    core.IsCrouching = true;
+                    core.SpeedMultiplier = crouchSpeedMultiplier;
+                    core.StepVolumeMultiplier = crouchStepVolume;
+                    core.SprintBlocked = true;
+                    core.JumpBlocked = true;
+                }
+                else
+                {
+                    core.SpeedMultiplier = 1f;
+                    core.StepVolumeMultiplier = 1f;
+                    core.SprintBlocked = false;
+                    core.JumpBlocked = false;
+                    core.IsCrouching = false;
+                }
             }
+
             base.OnDisable();
         }
 
@@ -147,8 +191,17 @@ namespace ModularFPP
         private void HandleJumped()
         {
             if (!core.IsCrouching) return;
+
             toggled = false;
             ignoreHold = true;
+
+            // The jump is already validated against standing headroom. Update shared state now,
+            // so animation/camera modules later this frame see the uncrouch transition immediately.
+            core.IsCrouching = false;
+            core.SpeedMultiplier = 1f;
+            core.StepVolumeMultiplier = 1f;
+            core.SprintBlocked = false;
+            core.JumpBlocked = false;
         }
 
         private void OnGUI()
