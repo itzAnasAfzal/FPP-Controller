@@ -5,28 +5,31 @@ namespace ModularFPP
 {
     public class FPPAnimation : FPPModule
     {
-        public override int Order => 300; // Runs after the movement module updates CharacterController velocity.
+        public override int Order => 300;
 
-        [Header("Animators (auto-found under the Player if empty)")]
+        [Header("Animators")]
         [SerializeField] private Animator[] animators;
 
-        [Header("Parameter names (must match your Animator Controller)")]
+        [Header("Parameters")]
         [SerializeField] private string XVelocityParam = "X_Velocity";
         [SerializeField] private string YVelocityParam = "Y_Velocity";
         [SerializeField] private string ZVelocityParam = "Z_Velocity";
         [SerializeField] private string speedParam = "Speed";
         [SerializeField] private string sprintingParam = "IsSprinting";
         [SerializeField] private string crouchingParam = "IsCrouching";
-        [SerializeField] private string groundedParam = "Grounded";
-        [SerializeField] private string FallingParam = "Falling";
+        [SerializeField] private string fallingParam = "Falling";
         [SerializeField] private string jumpTrigger = "Jump";
-        [SerializeField] private string landTrigger = "Land";
+        [SerializeField] private string landTrigger = "Land"; // ADDED BACK
 
         [Header("Tuning")]
         [SerializeField, Min(0f)] private float moveDamp = 0.1f;
-        [SerializeField, Min(0f)] private float minLandImpactForAnim = 4f;
+
+        // NEW: Prevents the falling animation from playing while winding up for a jump
+        [Tooltip("How fast must the player be falling to trigger the Falling animation?")]
+        [SerializeField] private float fallingVelocityThreshold = -2f;
+
         [SerializeField] private bool showDebug;
-        [SerializeField, Min(0.01f)] private float jumpTriggerResetDelay = 0.2f;
+        [SerializeField, Min(0.01f)] private float triggerResetDelay = 0.2f;
 
         private sealed class Target
         {
@@ -38,11 +41,12 @@ namespace ModularFPP
 
         private readonly List<Target> targets = new List<Target>(2);
         private int xHash, yHash, zHash, speedHash, sprintingHash, crouchingHash;
-        private int groundedHash, fallingHash, jumpHash, landHash;
-        private float jumpTriggerResetTimer;
+        private int  fallingHash, jumpHash, landHash;
+
+        private float jumpResetTimer;
+        private float landResetTimer;
         private bool jumpTriggeredThisFrame;
-        private Vector2 lastMove;
-        private float lastSpeed;
+        private bool landTriggeredThisFrame;
 
         protected override void Awake()
         {
@@ -57,58 +61,40 @@ namespace ModularFPP
             speedHash = Animator.StringToHash(speedParam);
             sprintingHash = Animator.StringToHash(sprintingParam);
             crouchingHash = Animator.StringToHash(crouchingParam);
-            groundedHash = Animator.StringToHash(groundedParam);
-            fallingHash = Animator.StringToHash(FallingParam);
+            fallingHash = Animator.StringToHash(fallingParam);
             jumpHash = Animator.StringToHash(jumpTrigger);
             landHash = Animator.StringToHash(landTrigger);
 
             foreach (Animator animator in animators)
             {
                 if (animator == null) continue;
-                if (animator.runtimeAnimatorController == null)
-                {
-                    Debug.LogWarning($"FPPAnimation: '{animator.name}' has no Animator Controller assigned.", animator);
-                    continue;
-                }
+                if (animator.runtimeAnimatorController == null) continue;
 
                 var target = new Target { animator = animator };
                 AnimatorControllerParameter[] parameters = animator.parameters;
                 for (int i = 0; i < parameters.Length; i++)
                 {
-                    AnimatorControllerParameter parameter = parameters[i];
-                    int hash = parameter.nameHash;
-                    bool isFloat = parameter.type == AnimatorControllerParameterType.Float;
-                    bool isBool = parameter.type == AnimatorControllerParameterType.Bool;
-                    bool isTrigger = parameter.type == AnimatorControllerParameterType.Trigger;
-
-                    if (isFloat)
+                    var p = parameters[i];
+                    if (p.type == AnimatorControllerParameterType.Float)
                     {
-                        if (hash == xHash) target.hasX = true;
-                        else if (hash == yHash) target.hasY = true;
-                        else if (hash == zHash) target.hasZ = true;
-                        else if (hash == speedHash) target.hasSpeed = true;
+                        if (p.nameHash == xHash) target.hasX = true;
+                        else if (p.nameHash == yHash) target.hasY = true;
+                        else if (p.nameHash == zHash) target.hasZ = true;
+                        else if (p.nameHash == speedHash) target.hasSpeed = true;
                     }
-                    else if (isBool)
+                    else if (p.type == AnimatorControllerParameterType.Bool)
                     {
-                        if (hash == sprintingHash) target.hasSprinting = true;
-                        else if (hash == crouchingHash) target.hasCrouching = true;
-                        else if (hash == groundedHash) target.hasGrounded = true;
-                        else if (hash == fallingHash) target.hasFalling = true;
+                        if (p.nameHash == sprintingHash) target.hasSprinting = true;
+                        else if (p.nameHash == crouchingHash) target.hasCrouching = true;
+                        else if (p.nameHash == fallingHash) target.hasFalling = true;
                     }
-                    else if (isTrigger)
+                    else if (p.type == AnimatorControllerParameterType.Trigger)
                     {
-                        if (hash == jumpHash) target.hasJumpTrigger = true;
-                        else if (hash == landHash) target.hasLandTrigger = true;
+                        if (p.nameHash == jumpHash) target.hasJumpTrigger = true;
+                        else if (p.nameHash == landHash) target.hasLandTrigger = true;
                     }
                 }
-
                 targets.Add(target);
-            }
-
-            if (targets.Count == 0)
-            {
-                Debug.LogWarning("FPPAnimation: no usable Animator found under the Player.", this);
-                enabled = false;
             }
         }
 
@@ -117,7 +103,7 @@ namespace ModularFPP
             base.OnEnable();
             if (core == null) return;
             core.Jumped += HandleJumped;
-            core.Landed += HandleLanded;
+            core.Landed += HandleLanded; // Re-subscribed
         }
 
         protected override void OnDisable()
@@ -132,14 +118,14 @@ namespace ModularFPP
 
         public override void Tick(float dt)
         {
-            // Core caches velocity after CharacterController.Move; no repeated native velocity reads.
             Vector3 localVelocity = transform.InverseTransformDirection(core.ActualVelocity);
             float horizontalSpeed = core.ActualHorizontalSpeed;
-            lastMove = new Vector2(localVelocity.x, localVelocity.z);
-            lastSpeed = horizontalSpeed;
 
             bool grounded = core.IsGrounded;
-            bool falling = !grounded && localVelocity.y < -0.1f;
+
+            // Use threshold to ensure windup doesn't trigger falling
+            bool falling = !grounded && localVelocity.y < fallingVelocityThreshold;
+
             bool sprinting = core.IsSprinting && horizontalSpeed > 0.5f;
             bool crouching = core.IsCrouching;
 
@@ -155,34 +141,42 @@ namespace ModularFPP
                 if (target.hasSpeed) animator.SetFloat(speedHash, horizontalSpeed, moveDamp, dt);
                 if (target.hasSprinting) animator.SetBool(sprintingHash, sprinting);
                 if (target.hasCrouching) animator.SetBool(crouchingHash, crouching);
-                if (target.hasGrounded) animator.SetBool(groundedHash, grounded);
                 if (target.hasFalling) animator.SetBool(fallingHash, falling);
             }
 
-            // Clear a trigger if the Animator could not consume it during the reset window.
-            if (jumpTriggeredThisFrame)
-            {
-                // Never clear the trigger before Unity has had a chance to evaluate this frame's Animator.
-                jumpTriggeredThisFrame = false;
-            }
-            else if (jumpTriggerResetTimer > 0f)
-            {
-                jumpTriggerResetTimer -= dt;
-                if (jumpTriggerResetTimer <= 0f) Fire(jumpHash, false);
-            }
+            HandleTriggerResets(dt);
         }
 
         private void HandleJumped()
         {
-            Fire(landHash, false);
             Fire(jumpHash, true);
-            jumpTriggerResetTimer = jumpTriggerResetDelay;
+            jumpResetTimer = triggerResetDelay;
             jumpTriggeredThisFrame = true;
         }
 
         private void HandleLanded(float impactSpeed, float airTime)
         {
-            if (impactSpeed >= minLandImpactForAnim) Fire(landHash, true);
+            // Fire Land trigger instantly when touched ground
+            Fire(landHash, true);
+            landResetTimer = triggerResetDelay;
+            landTriggeredThisFrame = true;
+        }
+
+        private void HandleTriggerResets(float dt)
+        {
+            if (jumpTriggeredThisFrame) jumpTriggeredThisFrame = false;
+            else if (jumpResetTimer > 0f)
+            {
+                jumpResetTimer -= dt;
+                if (jumpResetTimer <= 0f) Fire(jumpHash, false);
+            }
+
+            if (landTriggeredThisFrame) landTriggeredThisFrame = false;
+            else if (landResetTimer > 0f)
+            {
+                landResetTimer -= dt;
+                if (landResetTimer <= 0f) Fire(landHash, false);
+            }
         }
 
         private void Fire(int hash, bool activate)
@@ -198,13 +192,6 @@ namespace ModularFPP
                 target.animator.ResetTrigger(hash);
                 if (activate) target.animator.SetTrigger(hash);
             }
-        }
-
-        private void OnGUI()
-        {
-            if (!showDebug) return;
-            GUI.Label(new Rect(10, 85, 480, 25),
-                $"MoveX {lastMove.x:F2} | MoveY {lastMove.y:F2} | Speed {lastSpeed:F2}");
         }
     }
 }

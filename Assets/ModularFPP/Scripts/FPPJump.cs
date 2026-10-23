@@ -11,6 +11,10 @@ namespace ModularFPP
         [SerializeField, Min(0f)] protected float jumpHeight = 1.3f;
         [SerializeField] protected bool canJumpWhileSliding = true;
 
+        // NEW: Delay physics to match animation wind-up
+        [Tooltip("How long to wait before applying the upward physics force. Match this to the wind-up frames of your jump animation.")]
+        [SerializeField, Min(0f)] protected float jumpPhysicsDelay = 0.15f;
+
         [Header("Forgiveness")]
         [SerializeField, Min(0f)] protected float coyoteTime = 0.12f;
         [SerializeField, Min(0f)] protected float jumpBufferTime = 0.15f;
@@ -20,10 +24,6 @@ namespace ModularFPP
 
         [Header("Sounds")]
         [SerializeField, Range(0f, 1f)] protected float jumpVolume = 0.6f;
-        [SerializeField, Range(0.5f, 1.5f)] protected float landPitch = 0.8f;
-        [SerializeField, Min(0f)] protected float minLandSpeed = 3f;
-        [SerializeField, Min(0.01f)] protected float hardLandSpeed = 14f;
-        [SerializeField, Min(0f)] protected float minAirTimeForLanding = 0.08f;
 
         private float coyoteTimer;
         private float bufferTimer;
@@ -31,22 +31,46 @@ namespace ModularFPP
         private float peakFallSpeed;
         private bool wasGrounded = true;
 
+        // NEW: Physics delay tracking
+        private float physicsDelayTimer = 0f;
+        private bool isJumpPending = false;
+
         public override void Tick(float dt)
         {
-            // Keep a short grace period after walking off an edge; zero disables only the grace period.
             coyoteTimer = core.IsGrounded ? coyoteTime : Mathf.Max(0f, coyoteTimer - dt);
 
             bool pressedThisFrame = core.JumpAction.WasPressedThisFrame();
-            bufferTimer = pressedThisFrame
-                ? jumpBufferTime
-                : Mathf.Max(0f, bufferTimer - dt);
+            bool canBuffer = core.IsGrounded || coyoteTimer > 0f;
 
-            TrackAirAndLanding(dt);
+            if (pressedThisFrame && canBuffer)
+            {
+                bufferTimer = jumpBufferTime;
+            }
+            else
+            {
+                bufferTimer = Mathf.Max(0f, bufferTimer - dt);
+            }
 
-            // Input, jump impulse, event, and animation trigger all happen in this frame.
-            bool hasJumpRequest = pressedThisFrame || bufferTimer > 0f;
+            TrackAirState(dt);
+
+            bool hasJumpRequest = bufferTimer > 0f;
             bool hasGroundGrace = core.IsGrounded || coyoteTimer > 0f;
-            if (hasJumpRequest && hasGroundGrace && CanJump()) PerformJump();
+
+            // If we haven't started the jump yet, check if we can
+            if (!isJumpPending && hasJumpRequest && hasGroundGrace && CanJump())
+            {
+                TriggerJumpSequence();
+            }
+
+            // Handle the delayed physics launch
+            if (isJumpPending)
+            {
+                physicsDelayTimer -= dt;
+                if (physicsDelayTimer <= 0f)
+                {
+                    ApplyPhysicsJump();
+                }
+            }
         }
 
         protected virtual bool CanJump()
@@ -67,35 +91,45 @@ namespace ModularFPP
                 core.GroundMask, QueryTriggerInteraction.Ignore);
         }
 
-        protected virtual void PerformJump()
+        // Renamed from PerformJump to TriggerJumpSequence
+        protected virtual void TriggerJumpSequence()
         {
-            // Called immediately after CanJump succeeds in Tick; no delayed launch means no second
-            // ceiling physics query is needed in the same frame.
-            core.VerticalVelocity = Mathf.Sqrt(Mathf.Max(0f, jumpHeight * -2f * core.Gravity));
-            core.IsGrounded = false;
-            core.LaunchedThisFrame = true;
-            wasGrounded = false;
-            coyoteTimer = 0f;
+            // Clear the input buffer so we don't double jump
             bufferTimer = 0f;
+            coyoteTimer = 0f;
+            isJumpPending = true;
+            physicsDelayTimer = jumpPhysicsDelay;
+
+            wasGrounded = false;
             airTime = 0f;
             peakFallSpeed = 0f;
 
             PlayJumpSound();
+            // Fire the animation event IMMEDIATELY
             core.NotifyJumped();
         }
 
-        private void TrackAirAndLanding(float dt)
+        // NEW: Applies the actual physics force after the delay
+        private void ApplyPhysicsJump()
         {
-            if (!core.IsGrounded)
+            isJumpPending = false;
+            core.VerticalVelocity = Mathf.Sqrt(Mathf.Max(0f, jumpHeight * -2f * core.Gravity));
+            core.IsGrounded = false;
+            core.LaunchedThisFrame = true;
+        }
+
+        private void TrackAirState(float dt)
+        {
+            if (!core.IsGrounded && !isJumpPending)
             {
                 airTime += dt;
                 peakFallSpeed = Mathf.Max(peakFallSpeed, -core.VerticalVelocity);
             }
-            else if (!wasGrounded)
+            else if (core.IsGrounded && !wasGrounded)
             {
-                if (airTime >= minAirTimeForLanding)
+                // Fire the land event the EXACT frame the ground is touched
+                if (airTime >= 0.08f)
                 {
-                    PlayLandSound(peakFallSpeed);
                     core.NotifyLanded(peakFallSpeed, airTime);
                 }
 
@@ -104,19 +138,6 @@ namespace ModularFPP
             }
 
             wasGrounded = core.IsGrounded;
-        }
-
-        protected virtual void PlayLandSound(float impactSpeed)
-        {
-            if (impactSpeed < minLandSpeed) return;
-
-            SurfaceSound surface = core.GetCurrentSurface();
-            if (surface == null || !HasClips(surface.landClips)) return;
-
-            float impactBlend = Mathf.InverseLerp(minLandSpeed, hardLandSpeed, impactSpeed);
-            float volume = Mathf.Lerp(0.4f, 1f, impactBlend) * surface.volumeMultiplier;
-            AudioClip clip = surface.landClips[Random.Range(0, surface.landClips.Length)];
-            core.PlaySound(clip, volume, landPitch);
         }
 
         protected virtual void PlayJumpSound()

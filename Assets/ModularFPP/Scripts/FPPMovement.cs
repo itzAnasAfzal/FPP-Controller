@@ -95,16 +95,18 @@ namespace ModularFPP
         // ---------- SPRINT + STAMINA ----------
         protected virtual void HandleSprint()
         {
-            bool wantsSprint = core.SprintAction.IsPressed()
-                               && moveInput.sqrMagnitude > 0.01f;
+            // Sprint is allowed while moving forward, including forward diagonals.
+            // Pure sideways and backward movement cannot sprint.
+            bool movingForward = moveInput.y > 0.1f;
 
-            isSprinting = wantsSprint
-                          && !isExhausted
-                          && stamina > 0f
-                          && !core.IsSliding
-                          && !core.SprintBlocked;
+            isSprinting =
+                core.SprintAction.IsPressed() &&
+                movingForward &&
+                !isExhausted &&
+                stamina > 0f &&
+                !core.IsSliding &&
+                !core.SprintBlocked;
         }
-
         protected virtual void HandleStamina(float dt)
         {
             bool drainingNow = isSprinting && core.ActualHorizontalSpeed > 0.5f;

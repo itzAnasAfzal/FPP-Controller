@@ -17,7 +17,7 @@ namespace ModularFPP
 
         [Header("World Settings")]
         [SerializeField] private LayerMask groundMask;
-        [SerializeField, Min(0.01f)] private float gravity = -20f;
+        [SerializeField] private float gravity = -20f;
         [SerializeField, Min(0.01f)] private float groundCheckDistance = 0.3f;
         [SerializeField] private bool lockCursorOnStart = true;
 
