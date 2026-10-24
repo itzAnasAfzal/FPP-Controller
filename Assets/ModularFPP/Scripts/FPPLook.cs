@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,20 +21,34 @@ namespace ModularFPP
         [SerializeField] protected bool useSmoothing = true;
         [SerializeField, Range(0.01f, 0.2f)] protected float smoothTime = 0.04f;
 
+        [Header("Camera Body Clearance")]
+        [SerializeField] protected float forwardPushDistance = 0.15f;
+
+        [SerializeField, Range(0f, 90f)] protected float pushStartAngle = 20f;
+
         protected float targetYaw, targetPitch, currentYaw, currentPitch;
+        protected Vector3 initialCameraRootPosition;
+        protected Vector3 lastAppliedForwardPush;
 
         protected override void Awake()
         {
             base.Awake();
+
             if (core.CameraRoot == null)
             {
-                Debug.LogError("FPPLook: assign a Camera Root on FPPCore before enabling look.", this);
+                Debug.LogError(
+                    "FPPLook: assign a Camera Root on FPPCore before enabling look.",
+                    this
+                );
                 enabled = false;
                 return;
             }
 
+            initialCameraRootPosition = core.CameraRoot.localPosition;
+
             targetYaw = currentYaw = transform.eulerAngles.y;
-            targetPitch = currentPitch = Mathf.DeltaAngle(0f, core.CameraRoot.localEulerAngles.x);
+            targetPitch = currentPitch =
+                Mathf.DeltaAngle(0f, core.CameraRoot.localEulerAngles.x);
         }
 
         public override void Tick(float dt)
@@ -44,13 +59,19 @@ namespace ModularFPP
 
             bool usingGamepad = core.LookAction.activeControl != null
                                 && core.LookAction.activeControl.device is Gamepad;
+
             Vector2 delta = usingGamepad
                 ? input * gamepadSensitivity * dt
                 : input * mouseSensitivity;
 
             targetYaw += delta.x;
             targetPitch += invertY ? delta.y : -delta.y;
-            targetPitch = Mathf.Clamp(targetPitch, -maxLookUp, maxLookDown);
+
+            targetPitch = Mathf.Clamp(
+                targetPitch,
+                -maxLookUp,
+                maxLookDown
+            );
 
             if (useSmoothing)
             {
@@ -65,7 +86,26 @@ namespace ModularFPP
             }
 
             transform.rotation = Quaternion.Euler(0f, currentYaw, 0f);
+
             core.CameraRoot.localRotation = Quaternion.Euler(currentPitch, 0f, 0f);
+
+            // Remove the previous frame's forward push.
+            core.CameraRoot.localPosition -= lastAppliedForwardPush;
+
+            // Calculate the new push.
+            float lookDownAngle = Mathf.Max(0f, currentPitch);
+
+            float pushFactor = Mathf.InverseLerp(
+                pushStartAngle,
+                maxLookDown,
+                lookDownAngle
+            );
+
+            lastAppliedForwardPush =
+                Vector3.forward * (forwardPushDistance * pushFactor);
+
+            // Apply the new push.
+            core.CameraRoot.localPosition += lastAppliedForwardPush;
         }
     }
 }
