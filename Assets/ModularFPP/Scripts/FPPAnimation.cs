@@ -36,6 +36,9 @@ namespace ModularFPP
 
         [SerializeField] private bool showDebug;
         [SerializeField, Min(0.01f)] private float triggerResetDelay = 0.2f;
+        [Header("Landing Trigger")]
+        [SerializeField, Min(0.1f)]
+        private float landTriggerHoldTime = 0.75f;
 
 
 
@@ -107,15 +110,15 @@ namespace ModularFPP
                 }
                 targets.Add(target);
 
-                if (showDebug)
-                {
-                    Debug.Log(
-                        $"[FPPAnimation] Registered animator '{animator.name}' " +
-                        $"(hasX={target.hasX}, hasY={target.hasY}, hasZ={target.hasZ}, " +
-                        $"hasCrouching={target.hasCrouching}, hasFalling={target.hasFalling}, " +
-                        $"hasJumpTrigger={target.hasJumpTrigger}, hasLandTrigger={target.hasLandTrigger})",
-                        this);
-                }
+                //if (showDebug)
+                //{
+                //    Debug.Log(
+                //        $"[FPPAnimation] Registered animator '{animator.name}' " +
+                //        $"(hasX={target.hasX}, hasY={target.hasY}, hasZ={target.hasZ}, " +
+                //        $"hasCrouching={target.hasCrouching}, hasFalling={target.hasFalling}, " +
+                //        $"hasJumpTrigger={target.hasJumpTrigger}, hasLandTrigger={target.hasLandTrigger})",
+                //        this);
+                //}
             }
 
             if (showDebug)
@@ -159,27 +162,27 @@ namespace ModularFPP
             {
                 if (speed > movingEnterSpeed) isMoving = true;
             }
-            if (showDebug)
-            {
-                debugFrameCounter++;
-                if (debugFrameCounter >= DebugLogInterval)
-                {
-                    debugFrameCounter = 0;
-                    Debug.Log(
-                        $"[FPPAnimation] Core values -> " +
-                         $"ActualSpeed={speed} " +
-                        $"ActualVelocity={core.ActualVelocity} " +
-                        $"LocalVelocity={localVelocity} " +
-                        $"ActualHorizontalSpeed={horizontalSpeed:F3} " +
-                        $"IsGrounded={grounded} " +
-                        $"Falling={falling} " +
-                        $"IsSprinting={core.IsSprinting} " +
-                        $"Sprinting={sprinting} " +
-                        $"IsCrouching={crouching} " +
-                        $"moveDamp={moveDamp:F3} fallingVelocityThreshold={fallingVelocityThreshold:F3}",
-                        this);
-                }
-            }
+            //if (showDebug)
+            //{
+            //    debugFrameCounter++;
+            //    if (debugFrameCounter >= DebugLogInterval)
+            //    {
+            //        debugFrameCounter = 0;
+            //        Debug.Log(
+            //            $"[FPPAnimation] Core values -> " +
+            //             $"ActualSpeed={speed} " +
+            //            $"ActualVelocity={core.ActualVelocity} " +
+            //            $"LocalVelocity={localVelocity} " +
+            //            $"ActualHorizontalSpeed={horizontalSpeed:F3} " +
+            //            $"IsGrounded={grounded} " +
+            //            $"Falling={falling} " +
+            //            $"IsSprinting={core.IsSprinting} " +
+            //            $"Sprinting={sprinting} " +
+            //            $"IsCrouching={crouching} " +
+            //            $"moveDamp={moveDamp:F3} fallingVelocityThreshold={fallingVelocityThreshold:F3}",
+            //            this);
+            //    }
+            //}
 
 
             for (int i = 0; i < targets.Count; i++)
@@ -215,10 +218,24 @@ namespace ModularFPP
         private void HandleLanded(float impactSpeed, float airTime)
         {
             if (showDebug)
+            {
                 Debug.Log(
-                    $"[FPPAnimation] Core.Landed fired -> triggering '{landTrigger}' " +
-                    $"(impactSpeed={impactSpeed:F3}, airTime={airTime:F3})",
+                    $"[FPPAnimation] Landed -> triggering '{landTrigger}' " +
+                    $"(impactSpeed={impactSpeed:F3}, airTime={airTime:F3}, " +
+                    $"holdTime={landTriggerHoldTime:F2})",
                     this);
+            }
+            // Immediately clear the falling state on every registered Animator.
+            for (int i = 0; i < targets.Count; i++)
+            {
+                Target target = targets[i];
+
+                if (target.animator == null || !target.animator.isActiveAndEnabled)
+                    continue;
+
+                if (target.hasFalling)
+                    target.animator.SetBool(fallingHash, false);
+            }
 
             // Fire Land trigger instantly when touched ground
             Fire(landHash, true);
@@ -234,19 +251,29 @@ namespace ModularFPP
                 jumpResetTimer -= dt;
                 if (jumpResetTimer <= 0f)
                 {
-                    if (showDebug) Debug.Log($"[FPPAnimation] Resetting trigger '{jumpTrigger}'", this);
+                    //if (showDebug) Debug.Log($"[FPPAnimation] Resetting trigger '{jumpTrigger}'", this);
                     Fire(jumpHash, false);
                 }
             }
 
-            if (landTriggeredThisFrame) landTriggeredThisFrame = false;
+            if (landTriggeredThisFrame)
+            {
+                landTriggeredThisFrame = false;
+            }
             else if (landResetTimer > 0f)
             {
                 landResetTimer -= dt;
+
                 if (landResetTimer <= 0f)
                 {
-                    if (showDebug) Debug.Log($"[FPPAnimation] Resetting trigger '{landTrigger}'", this);
                     Fire(landHash, false);
+
+                    if (showDebug)
+                    {
+                        Debug.Log(
+                            $"[FPPAnimation] Resetting '{landTrigger}' trigger.",
+                            this);
+                    }
                 }
             }
         }

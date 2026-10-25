@@ -25,6 +25,8 @@ namespace ModularFPP
         [Header("Sounds")]
         [SerializeField, Range(0f, 1f)] protected float jumpVolume = 0.6f;
 
+        [SerializeField, Range(0f, 1f)] protected float landVolume = 0.8f;
+        [SerializeField, Range(0.5f, 1.5f)] protected float landPitch = 1f;
         private float coyoteTimer;
         private float bufferTimer;
         private float airTime;
@@ -100,7 +102,7 @@ namespace ModularFPP
             isJumpPending = true;
             physicsDelayTimer = jumpPhysicsDelay;
 
-            wasGrounded = false;
+          
             airTime = 0f;
             peakFallSpeed = 0f;
 
@@ -120,26 +122,52 @@ namespace ModularFPP
 
         private void TrackAirState(float dt)
         {
-            if (!core.IsGrounded && !isJumpPending)
+            if (isJumpPending)
+                return;
+
+            if (!core.IsGrounded)
             {
                 airTime += dt;
                 peakFallSpeed = Mathf.Max(peakFallSpeed, -core.VerticalVelocity);
             }
-            else if (core.IsGrounded && !wasGrounded)
+            else if (!wasGrounded)
             {
-                // Fire the land event the EXACT frame the ground is touched
-                if (airTime >= 0.08f)
-                {
-                    core.NotifyLanded(peakFallSpeed, airTime);
-                }
+                PlayLandSound();
+                // Player has returned to the ground after being airborne.
+                core.NotifyLanded(peakFallSpeed, airTime);
 
                 airTime = 0f;
                 peakFallSpeed = 0f;
             }
 
+    //        Debug.Log(
+    //$"Grounded={core.IsGrounded}, " +
+    //$"WasGrounded={wasGrounded}, " +
+    //$"VerticalVelocity={core.VerticalVelocity:F2}, " +
+    //$"AirTime={airTime:F3}");
             wasGrounded = core.IsGrounded;
-        }
 
+
+        }
+        protected virtual void PlayLandSound()
+        {
+            SurfaceSound surface = core.GetCurrentSurface();
+
+            if (surface == null || !HasClips(surface.landClips))
+                return;
+
+            AudioClip clip = surface.landClips[
+                Random.Range(0, surface.landClips.Length)
+            ];
+
+            float volume = landVolume * surface.volumeMultiplier;
+
+            core.PlaySound(
+                clip,
+                Mathf.Clamp01(volume),
+                landPitch
+            );
+        }
         protected virtual void PlayJumpSound()
         {
             SurfaceSound surface = core.GetCurrentSurface();
